@@ -8,4 +8,5 @@ public interface ICourseRepository {
     Course getById(int id);
     void create(Course course);
     void delete(int id);
+    List<Course> findByName(String name);
 }

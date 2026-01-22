@@ -86,4 +86,27 @@ public class CourseRepository implements ICourseRepository {
             System.err.println("Error deleting course: " + e.getMessage());
         }
     }
+
+    @Override
+    public List<Course> findByName(String name) {
+        List<Course> courses = new ArrayList<>();
+        String sql = "SELECT id, title, instructor, credits FROM courses WHERE title ILIKE ?";
+        try (Connection conn = db.getConnection();
+             PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setString(1, "%" + name + "%");
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    courses.add(new Course(
+                            rs.getInt("id"),
+                            rs.getString("title"),
+                            rs.getString("instructor"),
+                            rs.getInt("credits")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error finding course: " + e.getMessage());
+        }
+        return courses;
+    }
 }

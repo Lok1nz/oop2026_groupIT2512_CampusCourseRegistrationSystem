@@ -57,4 +57,26 @@ public class StudentRepository implements IStudentRepository {
             System.err.println("Error deleting student: " + e.getMessage());
         }
     }
+
+    @Override
+    public List<Student> findByName(String name) {
+        List<Student> students = new ArrayList<>();
+        String sql = "SELECT * FROM students WHERE name ILIKE ?";
+        try (Connection conn = db.getConnection();
+             PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setString(1, "%" + name + "%");
+            try (ResultSet rs = st.executeQuery()) {
+                while (rs.next()) {
+                    students.add(new Student(
+                            rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getString("email")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Error searching student: " + e.getMessage());
+        }
+        return students;
+    }
 }

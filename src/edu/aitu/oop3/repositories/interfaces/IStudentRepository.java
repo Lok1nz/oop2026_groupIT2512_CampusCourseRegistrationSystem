@@ -7,4 +7,5 @@ public interface IStudentRepository {
     List<Student> getAll();
     void create(Student student);
     void delete(int id);
+    List<Student> findByName(String name);
 }
