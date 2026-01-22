@@ -7,4 +7,5 @@ public interface ICourseRepository {
     List<Course> getAll();
     Course getById(int id);
     void create(Course course);
+    void delete(int id);
 }

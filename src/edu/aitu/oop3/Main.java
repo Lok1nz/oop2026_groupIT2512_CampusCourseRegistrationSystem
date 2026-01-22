@@ -22,8 +22,10 @@ public class Main {
             System.out.println("\n--- University System ---");
             System.out.println("1. View all courses");
             System.out.println("2. Add new course");
-            System.out.println("3. View all students");
-            System.out.println("4. Add new student");
+            System.out.println("3. DELETE course");
+            System.out.println("4. View all students");
+            System.out.println("5. Add new student");
+            System.out.println("6. DELETE student");
             System.out.println("0. Exit");
             System.out.print("Select: ");
 
@@ -38,11 +40,19 @@ public class Main {
                     System.out.print("Credits: "); int c = Integer.parseInt(scanner.nextLine());
                     courseRepo.create(new Course(0, t, i, c));
                 } else if (choice == 3) {
-                    studentRepo.getAll().forEach(System.out::println);
+                    System.out.print("Enter Course ID to delete: ");
+                    int id = Integer.parseInt(scanner.nextLine());
+                    courseRepo.delete(id);
                 } else if (choice == 4) {
+                    studentRepo.getAll().forEach(System.out::println);
+                } else if (choice == 5) {
                     System.out.print("Name: "); String n = scanner.nextLine();
                     System.out.print("Email: "); String e = scanner.nextLine();
                     studentRepo.create(new Student(0, n, e));
+                } else if (choice == 6) {
+                    System.out.print("Enter Student ID to delete: ");
+                    int id = Integer.parseInt(scanner.nextLine());
+                    studentRepo.delete(id);
                 } else if (choice == 0) break;
             } catch (Exception e) {
                 System.out.println("Error: " + e.getMessage());

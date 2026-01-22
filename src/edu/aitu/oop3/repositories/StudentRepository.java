@@ -44,4 +44,17 @@ public class StudentRepository implements IStudentRepository {
             System.err.println("Error: " + e.getMessage());
         }
     }
+
+    @Override
+    public void delete(int id) {
+        String sql = "DELETE FROM students WHERE id = ?";
+        try (Connection conn = db.getConnection();
+             PreparedStatement st = conn.prepareStatement(sql)) {
+            st.setInt(1, id);
+            st.executeUpdate();
+            System.out.println("Student deleted successfully!");
+        } catch (SQLException e) {
+            System.err.println("Error deleting student: " + e.getMessage());
+        }
+    }
 }
