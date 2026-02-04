@@ -17,7 +17,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        IDB db = new DatabaseConnection();
+        IDB db = DatabaseConnection.getInstance();
 
         ICourseRepository courseRepo = new CourseRepository(db);
         IStudentRepository studentRepo = new StudentRepository(db);
@@ -54,7 +54,16 @@ public class Main {
                     System.out.print("Title: "); String t = scanner.nextLine();
                     System.out.print("Instructor: "); String i = scanner.nextLine();
                     System.out.print("Credits: "); int c = Integer.parseInt(scanner.nextLine());
-                    courseRepo.create(new Course(0, t, i, c));
+
+                    // Используем паттерн Builder вместо обычного конструктора
+                    Course newCourse = new Course.Builder()
+                            .setTitle(t)
+                            .setInstructor(i)
+                            .setCredits(c)
+                            .build();
+
+                    courseRepo.create(newCourse);
+                    System.out.println("Course added successfully using Builder!");
                 } else if (choice == 3) {
                     System.out.print("Enter name to search: ");
                     String name = scanner.nextLine();
