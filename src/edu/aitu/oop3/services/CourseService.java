@@ -1,15 +1,25 @@
 package edu.aitu.oop3.services;
 
+import edu.aitu.oop3.models.Course;
 import edu.aitu.oop3.repositories.interfaces.ICourseRepository;
 import edu.aitu.oop3.repositories.interfaces.IRegistrationRepository;
 
-public class    CourseService {
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class CourseService {
     private final ICourseRepository courseRepo;
     private final IRegistrationRepository regRepo;
 
     public CourseService(ICourseRepository courseRepo, IRegistrationRepository regRepo) {
         this.courseRepo = courseRepo;
         this.regRepo = regRepo;
+    }
+
+    public List<Course> getFilteredCourses(int minCredits) {
+        return courseRepo.getAll().stream()
+                .filter(c -> c.getCredits() >= minCredits)
+                .collect(Collectors.toList());
     }
 
     public void registerStudent(int studentId, int courseId) throws Exception {

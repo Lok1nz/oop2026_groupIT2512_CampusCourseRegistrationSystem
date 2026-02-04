@@ -43,6 +43,7 @@ public class Main {
             System.out.println("9. Register student to course");
             System.out.println("10. Drop course");
             System.out.println("11. View registrations");
+            System.out.println("12. Filter courses by credits0");
             System.out.println("0. Exit");
             System.out.print("Select option: ");
 
@@ -96,6 +97,15 @@ public class Main {
                     courseService.dropCourse(sid, cid);
                 } else if (choice == 11) {
                     regRepo.getAll().forEach(System.out::println);
+                } else if (choice == 12) {
+                    System.out.print("Enter minimum credits to filter: ");
+                    int min = Integer.parseInt(scanner.nextLine());
+                    List<Course> filtered = courseService.getFilteredCourses(min);
+                    if (filtered.isEmpty()) {
+                        System.out.println("No courses found.");
+                    } else {
+                        filtered.forEach(System.out::println);
+                    }
                 } else if (choice == 0) {
                     break;
                 }
