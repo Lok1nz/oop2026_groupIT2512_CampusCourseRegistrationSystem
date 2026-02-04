@@ -2,6 +2,7 @@ package edu.aitu.oop3;
 
 import edu.aitu.oop3.db.DatabaseConnection;
 import edu.aitu.oop3.db.IDB;
+import edu.aitu.oop3.factories.EntityFactory;
 import edu.aitu.oop3.models.Course;
 import edu.aitu.oop3.models.Student;
 import edu.aitu.oop3.repositories.CourseRepository;
@@ -29,7 +30,7 @@ public class Main {
 
         while (true) {
             System.out.println("\n--- Campus Course Registration System ---");
-            System.out.println("1. View all courses");
+            System.out.println("1. View all courses (Sorted by credits)");
             System.out.println("2. Add new course");
             System.out.println("3. Search course by name");
             System.out.println("4. Delete course");
@@ -49,26 +50,20 @@ public class Main {
                 int choice = Integer.parseInt(scanner.nextLine());
 
                 if (choice == 1) {
-                    courseRepo.getAll().forEach(System.out::println);
+                    List<Course> courses = courseRepo.getAll();
+                    courses.stream()
+                            .sorted((c1, c2) -> Integer.compare(c2.getCredits(), c1.getCredits()))
+                            .forEach(System.out::println);
                 } else if (choice == 2) {
                     System.out.print("Title: "); String t = scanner.nextLine();
                     System.out.print("Instructor: "); String i = scanner.nextLine();
                     System.out.print("Credits: "); int c = Integer.parseInt(scanner.nextLine());
-
-                    // Используем паттерн Builder вместо обычного конструктора
-                    Course newCourse = new Course.Builder()
-                            .setTitle(t)
-                            .setInstructor(i)
-                            .setCredits(c)
-                            .build();
-
-                    courseRepo.create(newCourse);
-                    System.out.println("Course added successfully using Builder!");
+                    Course course = EntityFactory.createCourse(t, i, c);
+                    courseRepo.create(course);
                 } else if (choice == 3) {
                     System.out.print("Enter name to search: ");
                     String name = scanner.nextLine();
-                    List<Course> found = courseRepo.findByName(name);
-                    if (found.isEmpty()) System.out.println("Not found."); else found.forEach(System.out::println);
+                    courseRepo.findByName(name).forEach(System.out::println);
                 } else if (choice == 4) {
                     System.out.print("Enter Course ID to delete: ");
                     int id = Integer.parseInt(scanner.nextLine());
@@ -78,12 +73,12 @@ public class Main {
                 } else if (choice == 6) {
                     System.out.print("Name: "); String n = scanner.nextLine();
                     System.out.print("Email: "); String e = scanner.nextLine();
-                    studentRepo.create(new Student(0, n, e));
+                    Student student = EntityFactory.createStudent(n, e);
+                    studentRepo.create(student);
                 } else if (choice == 7) {
                     System.out.print("Enter name to search: ");
                     String name = scanner.nextLine();
-                    List<Student> found = studentRepo.findByName(name);
-                    if (found.isEmpty()) System.out.println("Not found."); else found.forEach(System.out::println);
+                    studentRepo.findByName(name).forEach(System.out::println);
                 } else if (choice == 8) {
                     System.out.print("Enter Student ID to delete: ");
                     studentRepo.delete(Integer.parseInt(scanner.nextLine()));
